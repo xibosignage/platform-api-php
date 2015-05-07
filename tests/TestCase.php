@@ -12,8 +12,8 @@ class TestCase extends PHPUnit_Framework_TestCase
         $clientId = getenv('clientId');
         $clientSecret = getenv('clientSecret');
 
-        self::assertNotFalse($clientId);
-        self::assertNotFalse($clientSecret);
+        if (!$clientId || !$clientSecret)
+            throw new Exception('Environment not configured for testing');
 
         \SpringSignage\Api\Api::setClientCredentials('test', $clientId, $clientSecret, new FileAccessTokenStore());
     }
