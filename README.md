@@ -1,4 +1,5 @@
-PHP Library for the Spring Signage Xibo Platform API
+# PHP Library for the Spring Signage Platform API
+
 &copy; Spring Signage Ltd 2015
 
 This is a PHP library for the Spring Signage Xibo Platform. You can sign up for an account at https://springsignage.com/portal. The API is accessible to any customer holding a valid Reseller Account.
