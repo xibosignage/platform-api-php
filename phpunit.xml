@@ -1,0 +1,12 @@
+<phpunit bootstrap="tests/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="Spring Signage Platform API PHP Test Suite">
+            <directory suffix="Test.php">tests</directory>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist>
+            <directory>lib</directory>
+        </whitelist>
+    </filter>
+</phpunit>
