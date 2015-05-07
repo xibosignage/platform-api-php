@@ -95,20 +95,22 @@ class Api
 
     /**
      * Make a request
+     * @param string $route the route to call
      * @return Curl
      * @throws ApiException
      */
-    protected static function request()
+    protected static function request($route = '')
     {
         $accessToken = self::getAccessToken();
         $curl = new Curl();
-        $curl->base_url = $accessToken->url;
+        $curl->base_url = $accessToken->url . (($route != '') ? $route : '');
         $curl->setHeader('Authorization', $accessToken->token);
         $curl->complete(function() use ($curl) {
             $curl->close();
         });
         $curl->error(function() use ($curl) {
-            throw new ApiException($curl->error_message);
+            $message = (is_object($curl->response)) ? $curl->response->message : $curl->error_message;
+            throw new ApiException($message);
         });
 
         return $curl;
