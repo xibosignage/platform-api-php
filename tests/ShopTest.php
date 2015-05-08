@@ -36,10 +36,41 @@ class ShopTest extends TestCase
     /**
      * @depends testCheckOutAndroid
      */
-    public function testProcessQuoteNoAutoPay($orderId)
+    public function testProcessAndroidQuoteNoAutoPay($orderId)
     {
         self::setFromEnv();
 
         SpringSignage\Api\Shop::processQuote($orderId, false);
+    }
+
+    public function testCheckOutCms()
+    {
+        self::setFromEnv();
+
+        $cms = new \SpringSignage\Api\Product\CloudCms();
+        $cms->setNewInstance('api' . $this->generateRandomString(5), 2, true, \SpringSignage\Api\Cloud::$LONDON);
+
+        $order = \SpringSignage\Api\Shop::checkOut([$cms]);
+
+        $this->assertNotEmpty($order);
+
+        $this->assertArrayHasKey('orderId', (array)$order);
+
+        return $order->orderId;
+    }
+
+    /**
+     * @param int $length
+     * @return string
+     */
+    private function generateRandomString($length = 10)
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }
