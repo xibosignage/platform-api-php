@@ -6,6 +6,10 @@
 
 class ShopTest extends TestCase
 {
+    /**
+     * Test getting a price list
+     * @throws Exception
+     */
     public function testPriceList()
     {
         self::setFromEnv();
@@ -15,6 +19,11 @@ class ShopTest extends TestCase
         $this->assertArrayHasKey('products', (array)$products);
     }
 
+    /**
+     * Test creating an android quotation
+     * @return int
+     * @throws Exception
+     */
     public function testCheckOutAndroid()
     {
         self::setFromEnv();
@@ -34,6 +43,7 @@ class ShopTest extends TestCase
     }
 
     /**
+     * Test converting that quotation into an order
      * @depends testCheckOutAndroid
      */
     public function testProcessAndroidQuoteNoAutoPay($orderId)
@@ -43,6 +53,11 @@ class ShopTest extends TestCase
         SpringSignage\Api\Shop::processQuote($orderId, false);
     }
 
+    /**
+     * Test creating a CMS demo
+     * @return int
+     * @throws Exception
+     */
     public function testCheckOutCms()
     {
         self::setFromEnv();
@@ -57,6 +72,41 @@ class ShopTest extends TestCase
         $this->assertArrayHasKey('orderId', (array)$order);
 
         return $order->orderId;
+    }
+
+    /**
+     * Test creating a CMS demo and then creating a quotation to convert it to a full account
+     * @throws Exception
+     */
+    public function testCheckOutCmsDemoThenUpgrade()
+    {
+        self::setFromEnv();
+
+        $cms = new \SpringSignage\Api\Product\CloudCms();
+        $accountName = strtolower('api' . $this->generateRandomString(5));
+        $cms->setNewInstance($accountName , 2, true, \SpringSignage\Api\Cloud::$LONDON);
+
+        $order = \SpringSignage\Api\Shop::checkOut([$cms]);
+
+        $this->assertNotEmpty($order);
+        $this->assertArrayHasKey('orderId', (array)$order);
+
+        // Process quote
+        SpringSignage\Api\Shop::processQuote($order->orderId, false);
+
+        // Demo's are automatically created, so we can get this demo now
+        $instance = \SpringSignage\Api\Cloud::getInstances($accountName);
+
+        $this->assertEquals($accountName, $instance->accountName);
+
+        // Create another CMS product
+        $cms = new \SpringSignage\Api\Product\CloudCms();
+        $cms->setChangeExistingInstance($instance->hostingId, $instance->displays);
+
+        $order = \SpringSignage\Api\Shop::checkOut([$cms]);
+
+        $this->assertNotEmpty($order);
+        $this->assertArrayHasKey('orderId', (array)$order);
     }
 
     /**

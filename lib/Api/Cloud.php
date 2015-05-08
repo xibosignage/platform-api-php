@@ -15,13 +15,31 @@ class Cloud extends Api
     public static $NEWYORK = 2;
     public static $SINGAPORE = 3;
 
-    public function getThemes()
+    public static function getThemes()
     {
         return self::request('/theme')->get([]);
     }
 
-    public function getDomains()
+    public static function getDomains()
     {
         return self::request('/cloud/domain')->get([]);
+    }
+
+    /**
+     * Get CMS Instances
+     * @param string[Optional] $name
+     * @return string
+     */
+    public static function getInstances($name = '')
+    {
+        $params = [];
+
+        if ($name != '') {
+            $params['search'] = 'accountName|' . $name;
+        }
+
+        $data = self::request('/cloud')->get($params);
+
+        return ($name == '') ? $data : $data->data[0];
     }
 }
