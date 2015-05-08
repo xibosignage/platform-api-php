@@ -9,7 +9,7 @@
 namespace SpringSignage\Api\Product;
 
 
-class Android
+class Android implements Product
 {
     public $productId = 1;
     public $emailAddress;
