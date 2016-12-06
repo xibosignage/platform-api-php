@@ -9,8 +9,6 @@ class HomeTest extends TestCase
 {
     public function testHome()
     {
-        self::setFromEnv();
-
         $this->assertSame([
             "title" => "Spring Signage Customer Portal API",
             "error" => false,

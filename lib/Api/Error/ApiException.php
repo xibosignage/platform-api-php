@@ -5,7 +5,7 @@
  */
 
 
-namespace SpringSignage\Api\Error;
+namespace Xibo\Platform\Api\Error;
 
 
 class ApiException extends \Exception
