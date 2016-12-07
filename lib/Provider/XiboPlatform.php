@@ -8,12 +8,12 @@
 
 namespace Xibo\Platform\Provider;
 
-use Entity\Account;
 use GuzzleHttp\Psr7\MultipartStream;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
+use Xibo\Platform\Entity\Account;
 use Xibo\Platform\Api\Error\ApiException;
 
 class XiboPlatform extends AbstractProvider
@@ -78,7 +78,7 @@ class XiboPlatform extends AbstractProvider
      */
     public function getResourceOwnerDetailsUrl(AccessToken $token)
     {
-        return $this->getBaseUrl() . '/api/user/me?access_token=' . $token;
+        return $this->getBaseUrl() . '/api/user/account';
     }
 
     /**
@@ -116,6 +116,17 @@ class XiboPlatform extends AbstractProvider
         $token = ($token instanceof AccessToken) ? $token->getToken() : $token;
 
         return ['Authorization' => 'Bearer ' . $token];
+    }
+
+    /**
+     * @return \League\OAuth2\Client\Provider\ResourceOwnerInterface
+     */
+    public function me()
+    {
+        if ($this->token === null || $this->token->hasExpired())
+            $this->token = $this->getAccessToken('client_credentials');
+
+        return $this->getResourceOwner($this->token);
     }
 
     /**

@@ -13,7 +13,7 @@ $provider = new \Xibo\Platform\Provider\XiboPlatform([
 ]);
 
 try {
-    var_export($provider->get('/'));
+    var_export($provider->me());
 } catch (Exception $e) {
     echo 'Exception: ' . PHP_EOL;
     echo $e->getMessage()  . PHP_EOL;
