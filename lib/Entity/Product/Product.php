@@ -6,7 +6,7 @@
  */
 
 
-namespace SpringSignage\Api\Product;
+namespace Xibo\Platform\Entity\Product;
 
 
 interface Product

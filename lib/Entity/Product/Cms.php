@@ -6,10 +6,10 @@
  */
 
 
-namespace SpringSignage\Api\Product;
+namespace Xibo\Platform\Entity\Product;
 
 
-class CloudCms implements Product
+class Cms implements Product
 {
     public $productId = 2;
     public $accountName;

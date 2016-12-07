@@ -4,9 +4,9 @@
  * Copyright (C) 2015 Spring Signage Ltd
  */
 
-namespace SpringSignage\Api;
+namespace Xibo\Platform\Entity;
 
-class Shop extends Api
+class Shop
 {
     /**
      * @return array an array of products

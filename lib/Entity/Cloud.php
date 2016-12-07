@@ -9,7 +9,7 @@
 namespace SpringSignage\Api;
 
 
-class Cloud extends Api
+class Cloud
 {
     public static $LONDON = 1;
     public static $NEWYORK = 2;
