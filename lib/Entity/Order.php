@@ -26,17 +26,21 @@ class Order extends Base
     /**
      * Complete the order
      * @param bool $autoPay
+     * @param string $webHookUrl
      * @return $this
      * @throws InvalidArgumentException
      */
-    public function complete($autoPay = true)
+    public function complete($autoPay = true, $webHookUrl = null)
     {
         if ($this->orderId == null || !is_numeric($this->orderId))
             throw new InvalidArgumentException('Please provide a valid orderId');
 
         $autoPay = ($autoPay) ? 1 : 0;
 
-        $result = $this->getProvider()->post('/shop/processquote/' . $this->orderId, ['autoPay' => $autoPay]);
+        $result = $this->getProvider()->post('/shop/processquote/' . $this->orderId, [
+            'autoPay' => $autoPay,
+            'webHookUrl' => $webHookUrl
+        ]);
 
         $this->state = $result['state'];
         $this->message = $result['message'];
