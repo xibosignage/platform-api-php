@@ -13,6 +13,8 @@ use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 use Xibo\Platform\Entity\Account;
 use Xibo\Platform\Api\Error\ApiException;
 
@@ -20,18 +22,44 @@ class XiboPlatform extends AbstractProvider
 {
     protected $mode = 'TEST';
 
+    /** @var  LoggerInterface */
+    protected $logger;
+
     /**
      * @var AccessToken
      */
     protected $token;
 
+    /**
+     * XiboPlatform constructor.
+     * @param array $options
+     * @param array $collaborators
+     */
     public function __construct(array $options, array $collaborators = [])
     {
         // Pull the mode out of settings.
         if (isset($options['MODE']))
             $this->mode = $options['MODE'];
 
+        // Logger
+        if (isset($collaborators['logger']))
+            $this->logger = $collaborators['logger'];
+        else
+            $this->logger = new NullLogger();
+
+        // Parent
         parent::__construct($options, $collaborators);
+
+        $this->getLogger()->debug('Constructed new Xibo Provider');
+    }
+
+    /**
+     * Get Logger
+     * @return LoggerInterface
+     */
+    public function getLogger()
+    {
+        return $this->logger;
     }
 
     /**
@@ -132,7 +160,7 @@ class XiboPlatform extends AbstractProvider
     /**
      * @param $url
      * @param $params
-     * @return \Psr\Http\Message\ResponseInterface
+     * @return mixed|array
      */
     public function get($url, $params = [])
     {
@@ -178,8 +206,12 @@ class XiboPlatform extends AbstractProvider
      */
     private function request($method, $url, $params = [])
     {
-        if ($this->token === null || $this->token->hasExpired())
+        $this->getLogger()->debug('Request to ' . $method . ' - ' . $url);
+
+        if ($this->token === null || $this->token->hasExpired()) {
+            $this->getLogger()->debug('Requesting new access token');
             $this->token = $this->getAccessToken('client_credentials');
+        }
 
         $options = [
             'header', 'body'

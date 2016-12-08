@@ -10,5 +10,5 @@ namespace Xibo\Platform\Api\Error;
 
 class ApiException extends \Exception
 {
-
+    protected $code = 500;
 }

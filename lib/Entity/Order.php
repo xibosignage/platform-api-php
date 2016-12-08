@@ -9,6 +9,7 @@
 namespace Xibo\Platform\Entity;
 
 use Api\Error\InvalidArgumentException;
+use Xibo\Platform\Api\Error\NotFoundException;
 
 class Order extends Base
 {
@@ -19,9 +20,30 @@ class Order extends Base
     public $discount;
     public $vat;
     public $total;
+    public $rfStatus;
 
     public $state;
     public $message;
+
+    /**
+     * Get an order by its order Id
+     * @param int $orderId
+     * @return $this
+     * @throws NotFoundException
+     */
+    public function getById($orderId)
+    {
+        $this->getProvider()->getLogger()->debug('Order getById for ' . $orderId);
+
+        $result = $this->getProvider()->get('/user/orders?orderId=' . $orderId);
+
+        if (count($result) <= 0)
+            throw new NotFoundException();
+
+        $this->hydrate($result[0]);
+
+        return $this;
+    }
 
     /**
      * Complete the order
