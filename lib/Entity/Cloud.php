@@ -8,6 +8,8 @@
 
 namespace Xibo\Platform\Entity;
 
+use Xibo\Platform\Api\Error\NotFoundException;
+
 class Cloud extends Base
 {
     use EntityTrait;
@@ -41,7 +43,8 @@ class Cloud extends Base
     /**
      * Get CMS Instances
      * @param string[Optional] $name
-     * @return string
+     * @return array
+     * @throws NotFoundException
      */
     public function getInstances($name = '')
     {
@@ -53,6 +56,13 @@ class Cloud extends Base
 
         $data = $this->getProvider()->get('/cloud', $params);
 
-        return ($name == '') ? $data : $data->data[0];
+        if ($name == '') {
+            return $data;
+        } else {
+            if (count($data) < 0)
+                throw new NotFoundException('Instance ' . $name . ' not found', 'cloud');
+
+            return $data[0];
+        }
     }
 }

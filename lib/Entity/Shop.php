@@ -6,7 +6,7 @@
 
 namespace Xibo\Platform\Entity;
 
-use Api\Error\InvalidArgumentException;
+use Xibo\Platform\Api\Error\InvalidArgumentException;
 use Xibo\Platform\Entity\Product\Product;
 
 class Shop extends Base

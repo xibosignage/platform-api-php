@@ -8,14 +8,16 @@
 
 namespace Xibo\Platform\Api\Error;
 
-use Exception;
 
 class NotFoundException extends ApiException
 {
     protected $code = 404;
+    public $entity = null;
 
-    public function __construct($message = 'Not Found', $code = 0, Exception $previous = null)
+    public function __construct($message = 'Not Found', $entity = null)
     {
-        parent::__construct($message, $code, $previous);
+        $this->entity = $entity;
+
+        parent::__construct($message, $this->code);
     }
 }

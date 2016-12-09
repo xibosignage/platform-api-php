@@ -131,7 +131,7 @@ class XiboPlatform extends AbstractProvider
     {
         // Check HTTP status
         if ($response->getStatusCode() != 200 && $response->getStatusCode() != 201 && $response->getStatusCode() != 204)
-            throw new ApiException('Error with response. ' . $response->getStatusCode() . ' - ' . $response->getBody());
+            throw (new ApiException())->createFromResponse($response);
 
         if (!empty($data['error'])) {
             $message = $data['error']['type'].': '.$data['error']['message'];
