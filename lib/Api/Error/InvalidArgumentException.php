@@ -6,10 +6,7 @@
  */
 
 
-namespace Api\Error;
-
-
-use Xibo\Platform\Api\Error\ApiException;
+namespace Xibo\Platform\Api\Error;
 
 class InvalidArgumentException extends ApiException
 {
