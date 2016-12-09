@@ -11,7 +11,6 @@ namespace Xibo\Platform\Entity\Product;
 
 class Cms implements Product
 {
-    public $productId = 2;
     public $accountName;
     public $displays;
     public $isDemo;
@@ -21,6 +20,11 @@ class Cms implements Product
     public $themeId;
     public $cmsVersionId;
     public $regionId;
+
+    public function productId()
+    {
+        return 2;
+    }
 
     /**
      * Set for a New Account

@@ -6,23 +6,36 @@
  */
 
 
-namespace SpringSignage\Api;
+namespace Xibo\Platform\Entity;
 
-
-class Cloud
+class Cloud extends Base
 {
-    public static $LONDON = 1;
-    public static $NEWYORK = 2;
-    public static $SINGAPORE = 3;
+    use EntityTrait;
 
-    public static function getThemes()
+    /**
+     * @return array
+     */
+    public function getRegions()
     {
-        return self::request('/theme')->get([]);
+        return $this->getProvider()->get('/cloud/region');
     }
 
-    public static function getDomains()
+    /**
+     * Get Themes
+     * @return array
+     */
+    public function getThemes()
     {
-        return self::request('/cloud/domain')->get([]);
+        return $this->getProvider()->get('/theme');
+    }
+
+    /**
+     * Get Domains
+     * @return array
+     */
+    public function getDomains()
+    {
+        return $this->getProvider()->get('/cloud/domain');
     }
 
     /**
@@ -30,7 +43,7 @@ class Cloud
      * @param string[Optional] $name
      * @return string
      */
-    public static function getInstances($name = '')
+    public function getInstances($name = '')
     {
         $params = [];
 
@@ -38,7 +51,7 @@ class Cloud
             $params['search'] = 'accountName|' . $name;
         }
 
-        $data = self::request('/cloud')->get($params);
+        $data = $this->getProvider()->get('/cloud', $params);
 
         return ($name == '') ? $data : $data->data[0];
     }

@@ -43,7 +43,11 @@ try {
 
     echo json_encode($order) . PHP_EOL . PHP_EOL;*/
 
-   $provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Order($provider))->getById(6721)));
+    //$provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Order($provider))->getById(6721)));
+    //$provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Cloud($provider))->getThemes()));
+    //$provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Cloud($provider))->getDomains()));
+    $provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Cloud($provider))->getRegions()));
+    //$provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Cloud($provider))->getInstances()));
 
 } catch (Exception $e) {
     echo 'Exception: ' . PHP_EOL;
