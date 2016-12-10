@@ -26,29 +26,32 @@ $provider = new \Xibo\Platform\Provider\XiboPlatform([
 
 try {
 
-   /* // Create a simple android product and get a quote
+    // Create a simple android product and get a quote
     $android = new \Xibo\Platform\Entity\Product\Android();
     $android->emailAddress = 'a+' . rand() . '@springsignage.com';
     $android->version = '1.7';
     $android->numLicences = 2;
 
     $cart = new \Xibo\Platform\Entity\Shop($provider);
-    $cart->addLineItem($android);
+
+    $cart->addProduct($android);
+    $cart->addLineItem((new \Xibo\Platform\Entity\ShopItem())->createItemForCustomer($android, 'springsignage2', 'Subsidiary2'));
+
     $order = $cart->checkOut();
 
     echo json_encode($order) . PHP_EOL . PHP_EOL;
 
     // Access the quote
-    $order->complete(1);
+    //$order->complete(1);
 
-    echo json_encode($order) . PHP_EOL . PHP_EOL;*/
+    //echo json_encode($order) . PHP_EOL . PHP_EOL;
 
     //$provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Order($provider))->getById(6721)));
     //$provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Cloud($provider))->getThemes()));
     //$provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Cloud($provider))->getDomains()));
     //$provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Cloud($provider))->getRegions()));
     //$provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Cloud($provider))->getInstances()));
-    $provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Cloud($provider))->getInstances('unittest')));
+    //$provider->getLogger()->debug(json_encode((new \Xibo\Platform\Entity\Cloud($provider))->getInstances('unittest')));
 
 } catch (Exception $e) {
     echo 'Exception: ' . PHP_EOL;

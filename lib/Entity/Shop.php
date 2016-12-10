@@ -13,16 +13,25 @@ class Shop extends Base
 {
     use EntityTrait;
 
-    /** @var Product[] */
+    /** @var ShopItem[] */
     private $lineItems = [];
 
     /**
-     * Add a line item
-     * @param Product $item
+     * Add a line item to the card
+     * @param ShopItem $item
      */
     public function addLineItem($item)
     {
         $this->lineItems[] = $item;
+    }
+
+    /**
+     * Add a product to the cart
+     * @param Product $product
+     */
+    public function addProduct($product)
+    {
+        $this->lineItems[] = (new ShopItem())->createItem($product);
     }
 
     /**
@@ -35,19 +44,10 @@ class Shop extends Base
         if (count($this->lineItems) <= 0)
             throw new InvalidArgumentException('Please provide at least one line item');
 
-        // Process the line items and get them in the right order
-        $items = [];
+        $lineItems = json_encode($this->lineItems);
 
-        foreach ($this->lineItems as $item) {
-            // We want an object, with a productId and an array of product details
-            $object = new \stdClass();
-            $object->productId = $item->productId();
-            $object->productDetails = $item->productDetails();
-            $items[] = $object;
-        }
+        $this->getProvider()->getLogger()->debug('Checkout with line items: ' . $lineItems);
 
-        $order = $this->getProvider()->post('/user/checkout', ['lineItems' => json_encode($items)]);
-
-        return (new Order($this->getProvider()))->hydrate($order);
+        return (new Order($this->getProvider()))->hydrate($this->getProvider()->post('/user/checkout', ['lineItems' => $lineItems]));
     }
 }
