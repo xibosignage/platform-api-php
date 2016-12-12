@@ -41,6 +41,22 @@ class Cloud extends Base
     }
 
     /**
+     * Get instance by Id
+     * @param $id
+     * @return array
+     * @throws NotFoundException
+     */
+    public function getById($id)
+    {
+        $data = $this->getProvider()->get('/cloud', ['hostingId' => $id]);
+
+        if (count($data) < 0)
+            throw new NotFoundException('Instance ' . $id . ' ID not found', 'cloud');
+
+        return $data[0];
+    }
+
+    /**
      * Get CMS Instances
      * @param string[Optional] $name
      * @param string[Optional] $apiRef the api reference for the customer purchasing the CMS instance
