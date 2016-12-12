@@ -11,7 +11,7 @@ namespace Xibo\Platform\Entity;
 
 use Xibo\Platform\Entity\Product\Product;
 
-class ShopItem implements \JsonSerializable
+class CartItem implements \JsonSerializable
 {
     private $companyId;
     private $customerName;

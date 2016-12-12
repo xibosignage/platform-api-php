@@ -9,16 +9,16 @@ namespace Xibo\Platform\Entity;
 use Xibo\Platform\Api\Error\InvalidArgumentException;
 use Xibo\Platform\Entity\Product\Product;
 
-class Shop extends Base
+class Cart extends Base
 {
     use EntityTrait;
 
-    /** @var ShopItem[] */
+    /** @var CartItem[] */
     private $lineItems = [];
 
     /**
      * Add a line item to the card
-     * @param ShopItem $item
+     * @param CartItem $item
      */
     public function addLineItem($item)
     {
@@ -31,7 +31,24 @@ class Shop extends Base
      */
     public function addProduct($product)
     {
-        $this->lineItems[] = (new ShopItem())->createItem($product);
+        $this->lineItems[] = (new CartItem())->createItem($product);
+    }
+
+    /**
+     * Validate the cart
+     * @return Order
+     * @throws InvalidArgumentException
+     */
+    public function validate()
+    {
+        if (count($this->lineItems) <= 0)
+            throw new InvalidArgumentException('Please provide at least one line item');
+
+        $lineItems = json_encode($this->lineItems);
+
+        $this->getProvider()->getLogger()->debug('Checkout with line items: ' . $lineItems);
+
+        return (new Order($this->getProvider()))->hydrate($this->getProvider()->post('/user/cart/validate', ['lineItems' => $lineItems]));
     }
 
     /**

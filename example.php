@@ -27,17 +27,20 @@ $provider = new \Xibo\Platform\Provider\XiboPlatform([
 try {
 
     // Create a simple android product and get a quote
-    $android = new \Xibo\Platform\Entity\Product\Android();
+    /*$android = new \Xibo\Platform\Entity\Product\Android();
     $android->emailAddress = 'a+' . rand() . '@springsignage.com';
     $android->version = '1.7';
-    $android->numLicences = 2;
+    $android->numLicences = 2;*/
 
-    $cart = new \Xibo\Platform\Entity\Shop($provider);
+    $cloud = new \Xibo\Platform\Entity\Product\Cms();
+    $cloud->setNewInstance('unittest', 1, 0, 1);
 
-    $cart->addProduct($android);
-    $cart->addLineItem((new \Xibo\Platform\Entity\ShopItem())->createItemForCustomer($android, 'springsignage2', 'Subsidiary2'));
+    $cart = new \Xibo\Platform\Entity\Cart($provider);
 
-    $order = $cart->checkOut();
+    $cart->addProduct($cloud);
+    //$cart->addLineItem((new \Xibo\Platform\Entity\CartItem())->createItemForCustomer($android, 'springsignage2', 'Subsidiary2'));
+
+    $order = $cart->validate();
 
     echo json_encode($order) . PHP_EOL . PHP_EOL;
 
