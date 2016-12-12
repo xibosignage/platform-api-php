@@ -43,15 +43,20 @@ class Cloud extends Base
     /**
      * Get CMS Instances
      * @param string[Optional] $name
+     * @param string[Optional] $apiRef the api reference for the customer purchasing the CMS instance
      * @return array
      * @throws NotFoundException
      */
-    public function getInstances($name = '')
+    public function getInstances($name = '', $apiRef = null)
     {
         $params = [];
 
         if ($name != '') {
             $params['search'] = 'accountName|' . $name;
+        }
+
+        if ($apiRef !== null) {
+            $params['companyApiRef'] = $apiRef;
         }
 
         $data = $this->getProvider()->get('/cloud', $params);
