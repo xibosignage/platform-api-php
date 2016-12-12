@@ -20,7 +20,11 @@ use Xibo\Platform\Api\Error\ApiException;
 
 class XiboPlatform extends AbstractProvider
 {
+    /** @var mixed|string  */
     protected $mode = 'TEST';
+
+    /** @var string|null */
+    protected $urlOverride = null;
 
     /** @var  LoggerInterface */
     protected $logger;
@@ -40,6 +44,9 @@ class XiboPlatform extends AbstractProvider
         // Pull the mode out of settings.
         if (isset($options['MODE']))
             $this->mode = $options['MODE'];
+
+        if (isset($options['urlOverride']))
+            $this->urlOverride = $options['urlOverride'];
 
         // Logger
         if (isset($collaborators['logger']))
@@ -68,8 +75,7 @@ class XiboPlatform extends AbstractProvider
      */
     private function getBaseUrl()
     {
-        return 'http://192.168.1.113/portal';
-        //return ($this->mode == 'PRODUCTION') ? 'https://springsignage.com/portal' : 'https://springsignage.com/portal-test';
+        return ($this->mode == 'PRODUCTION') ? 'https://springsignage.com/portal' : (!empty($this->urlOverride) ? $this->urlOverride : 'https://springsignage.com/portal-test');
     }
 
     /**

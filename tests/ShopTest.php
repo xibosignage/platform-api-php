@@ -7,37 +7,23 @@
 class ShopTest extends TestCase
 {
     /**
-     * Test getting a price list
-     * @throws Exception
-     */
-    public function testPriceList()
-    {
-        self::setFromEnv();
-
-        $products = \SpringSignage\Api\Shop::priceList();
-
-        $this->assertArrayHasKey('products', (array)$products);
-    }
-
-    /**
      * Test creating an android quotation
      * @return int
      * @throws Exception
      */
     public function testCheckOutAndroid()
     {
-        self::setFromEnv();
-
-        $android = new \SpringSignage\Api\Product\Android();
+        $android = new \Xibo\Platform\Entity\Product\Android();
         $android->emailAddress = 'test@springsignage.com';
-        $android->version = '1.7';
         $android->numLicences = 2;
 
-        $order = \SpringSignage\Api\Shop::checkOut([$android]);
+        $cart = new \Xibo\Platform\Entity\Cart($this->getProvider());
+        $cart->addProduct($android);
 
-        $this->assertNotEmpty($order);
+        $order = $cart->checkOut();
 
-        $this->assertArrayHasKey('orderId', (array)$order);
+        $this->assertNotEmpty($order->orderId);
+        $this->assertGreaterThan(0, $order->total);
 
         return $order->orderId;
     }
@@ -45,12 +31,14 @@ class ShopTest extends TestCase
     /**
      * Test converting that quotation into an order
      * @depends testCheckOutAndroid
+     * @param int $orderId
      */
     public function testProcessAndroidQuoteNoAutoPay($orderId)
     {
-        self::setFromEnv();
+        $order = new \Xibo\Platform\Entity\Order($this->getProvider());
+        $order->getById($orderId);
 
-        SpringSignage\Api\Shop::processQuote($orderId, false);
+        $order->complete(false);
     }
 
     /**
@@ -60,16 +48,15 @@ class ShopTest extends TestCase
      */
     public function testCheckOutCms()
     {
-        self::setFromEnv();
+        $cms = new \Xibo\Platform\Entity\Product\Cms();
+        $cms->setNewInstance('api' . $this->generateRandomString(5), 2, true, 1);
 
-        $cms = new \SpringSignage\Api\Product\CloudCms();
-        $cms->setNewInstance('api' . $this->generateRandomString(5), 2, true, \SpringSignage\Api\Cloud::$LONDON);
+        $cart = new \Xibo\Platform\Entity\Cart($this->getProvider());
+        $cart->addProduct($cms);
 
-        $order = \SpringSignage\Api\Shop::checkOut([$cms]);
+        $order = $cart->checkOut();
 
-        $this->assertNotEmpty($order);
-
-        $this->assertArrayHasKey('orderId', (array)$order);
+        $this->assertNotEmpty($order->orderId);
 
         return $order->orderId;
     }
@@ -80,33 +67,31 @@ class ShopTest extends TestCase
      */
     public function testCheckOutCmsDemoThenUpgrade()
     {
-        self::setFromEnv();
+        $instanceName = 'api' . $this->generateRandomString(5);
+        $cms = new \Xibo\Platform\Entity\Product\Cms();
+        $cms->setNewInstance($instanceName, 2, true, 1);
 
-        $cms = new \SpringSignage\Api\Product\CloudCms();
-        $accountName = strtolower('api' . $this->generateRandomString(5));
-        $cms->setNewInstance($accountName , 2, true, \SpringSignage\Api\Cloud::$LONDON);
+        $cart = new \Xibo\Platform\Entity\Cart($this->getProvider());
+        $cart->addProduct($cms);
 
-        $order = \SpringSignage\Api\Shop::checkOut([$cms]);
+        $order = $cart->checkOut();
+        $order->complete(true);
 
-        $this->assertNotEmpty($order);
-        $this->assertArrayHasKey('orderId', (array)$order);
+        // Demo only orders are automatically created.
+        $cloud = new \Xibo\Platform\Entity\Cloud($this->getProvider());
+        $instance = $cloud->getInstances($instanceName);
 
-        // Process quote
-        SpringSignage\Api\Shop::processQuote($order->orderId, false);
+        $this->assertNotEmpty($instance);
+        $this->assertArrayHasKey('hostingId', $instance);
 
-        // Demo's are automatically created, so we can get this demo now
-        $instance = \SpringSignage\Api\Cloud::getInstances($accountName);
+        // Create another order, to upgrade that instance to a full account
+        $cms = new \Xibo\Platform\Entity\Product\Cms();
+        $cms->setChangeExistingInstance($instance['hostingId'], 2);
 
-        $this->assertEquals($accountName, $instance->accountName);
+        $cart = new \Xibo\Platform\Entity\Cart($this->getProvider());
+        $cart->addProduct($cms);
 
-        // Create another CMS product
-        $cms = new \SpringSignage\Api\Product\CloudCms();
-        $cms->setChangeExistingInstance($instance->hostingId, $instance->displays);
-
-        $order = \SpringSignage\Api\Shop::checkOut([$cms]);
-
-        $this->assertNotEmpty($order);
-        $this->assertArrayHasKey('orderId', (array)$order);
+        $cart->checkOut();
     }
 
     /**

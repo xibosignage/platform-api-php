@@ -10,9 +10,15 @@ class HomeTest extends TestCase
     public function testHome()
     {
         $this->assertSame([
-            "title" => "Spring Signage Customer Portal API",
-            "error" => false,
-            "status" => 200
-        ], (array)\SpringSignage\Api\Api::home());
+            'baseUrl' => 'https://springsignage.com/portal-test',
+            'notificationBaseUrl' => 'https://springsignage.com/portal-test',
+            'route' => null,
+            'production' => false,
+            'data' => [
+                'title' => 'Xibo Cloud Platform API'
+            ],
+            'success' => true,
+            'status' => 200,
+        ], $this->getProvider()->get('/', ['envelope' => 1]));
     }
 }

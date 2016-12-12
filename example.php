@@ -19,7 +19,8 @@ $log = new Monolog\Logger('PLATFORM-API', $handlers, $processors);
 $provider = new \Xibo\Platform\Provider\XiboPlatform([
     'clientId' => 't3POgoBphkVfuA6PbfSzUTnPjZC2cj3hhanOUuMn',
     'clientSecret' => '878b84dc5b5c7bd36567bd1bbfa8395dc82863e8566eae30a9ddeeaa60f44623',
-    'mode' => 'TEST'
+    'mode' => 'TEST',
+    'urlOverride' => 'http://192.168.1.113/portal'
 ], [
     'logger' => $log
 ]);
