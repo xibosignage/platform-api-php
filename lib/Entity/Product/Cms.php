@@ -6,12 +6,11 @@
  */
 
 
-namespace SpringSignage\Api\Product;
+namespace Xibo\Platform\Entity\Product;
 
 
-class CloudCms implements Product
+class Cms implements Product
 {
-    public $productId = 2;
     public $accountName;
     public $displays;
     public $isDemo;
@@ -21,6 +20,11 @@ class CloudCms implements Product
     public $themeId;
     public $cmsVersionId;
     public $regionId;
+
+    public function productId()
+    {
+        return 2;
+    }
 
     /**
      * Set for a New Account

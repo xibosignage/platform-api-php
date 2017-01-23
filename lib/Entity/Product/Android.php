@@ -6,15 +6,19 @@
  */
 
 
-namespace SpringSignage\Api\Product;
+namespace Xibo\Platform\Entity\Product;
 
 
 class Android implements Product
 {
-    public $productId = 1;
     public $emailAddress;
     public $version;
     public $numLicences;
+
+    public function productId()
+    {
+        return 1;
+    }
 
     public function productDetails()
     {

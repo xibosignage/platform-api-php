@@ -1,6 +1,6 @@
 {
   "name": "xibosignage/platform-api-php",
-  "description": "Spring Signage Platform - PHP Library",
+  "description": "Xibo Cloud Platform and Licensing - PHP Library",
   "keywords": [
     "spring signage",
     "xibo",
@@ -16,15 +16,15 @@
     }
   ],
   "require": {
-    "php": ">=5.3.3",
-    "ext-curl": "*",
-    "ext-json": "*",
-    "php-curl-class/php-curl-class": "^3.5"
+    "php": ">=5.4.0",
+    "league/oauth2-client": "~1",
+    "psr/log": "^1.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.0"
+    "phpunit/phpunit": "~4.0",
+    "monolog/monolog": "^1.22"
   },
   "autoload": {
-    "psr-4": { "SpringSignage\\" : "lib/" }
+    "psr-4": { "Xibo\\Platform\\" : "lib/" }
   }
 }

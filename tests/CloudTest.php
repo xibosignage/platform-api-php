@@ -10,30 +10,19 @@ class CloudTest extends TestCase
 {
     public function testThemeList()
     {
-        self::setFromEnv();
-
-        $themes = \SpringSignage\Api\Cloud::getThemes();
-
-        $this->assertArrayHasKey('data', (array)$themes);
-        $this->assertGreaterThanOrEqual(2, count((array)$themes));
+        $themes = (new \Xibo\Platform\Entity\Cloud($this->getProvider()))->getThemes();
+        $this->assertGreaterThanOrEqual(2, count($themes));
     }
 
     public function testDomainList()
     {
-        self::setFromEnv();
-
-        $domains = \SpringSignage\Api\Cloud::getDomains();
-
-        $this->assertArrayHasKey('data', (array)$domains);
-        $this->assertGreaterThanOrEqual(3, count((array)$domains));
+        $domains = (new \Xibo\Platform\Entity\Cloud($this->getProvider()))->getDomains();
+        $this->assertGreaterThanOrEqual(3, count($domains));
     }
 
     public function testInstanceList()
     {
-        self::setFromEnv();
-
-        $instances = \SpringSignage\Api\Cloud::getInstances();
-
-        $this->assertArrayHasKey('data', (array)$instances);
+        $instances = (new \Xibo\Platform\Entity\Cloud($this->getProvider()))->getInstances();
+        $this->assertGreaterThanOrEqual(1, count($instances));
     }
 }

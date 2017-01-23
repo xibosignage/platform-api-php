@@ -6,11 +6,17 @@
  */
 
 
-namespace SpringSignage\Api\Product;
+namespace Xibo\Platform\Entity\Product;
 
 
 interface Product
 {
+    /**
+     * Product Id
+     * @return int
+     */
+    public function productId();
+
     /**
      * Details for this product
      * @return array
