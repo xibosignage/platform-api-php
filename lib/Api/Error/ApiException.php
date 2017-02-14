@@ -22,10 +22,10 @@ class ApiException extends \Exception
     {
         $this->code = $response->getStatusCode();
 
-        if (!$response = json_decode($response->getBody())) {
-            $this->message = $response->getBody() . json_last_error_msg();
+        if (!$decoded = json_decode($response->getBody())) {
+            $this->message = 'Status Code: ' . $response->getStatusCode() . '. JSON Error: ' . json_last_error_msg() . '. Body: ' . $response->getBody();
         } else {
-            $this->message = $response->error->message;
+            $this->message = $decoded->error->message;
         }
 
         return $this;
