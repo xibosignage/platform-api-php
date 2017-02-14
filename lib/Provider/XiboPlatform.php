@@ -231,12 +231,12 @@ class XiboPlatform extends AbstractProvider
             // Build the JSON body and content type
             $options['body'] = json_encode($params['json']);
             $options['headers'] = ['content-type' => 'application/json'];
-        } else if (count($params) > 0) {
-            $options['body'] = http_build_query($params, null, '&');
+        } else if ($method == 'POST' || $method == 'PUT' || $method == 'DELETE') {
+            $options['headers'] = ['content-type' => 'application/x-www-form-urlencoded'];
+            if (count($params) > 0) {
+                $options['body'] = http_build_query($params, null, '&');
+            }
         }
-
-        if ($method == 'PUT' || $method == 'DELETE')
-            $options['headers'] =  ['content-type' => 'application/x-www-form-urlencoded'];
 
         return $this->getResponse($this->getAuthenticatedRequest($method, $this->getBaseUrl() . '/api/' . trim($url, '/'), $this->token, $options));
     }
