@@ -20,6 +20,7 @@ class Cms implements Product
     public $themeId;
     public $cmsVersionId;
     public $regionId;
+    public $renew;
 
     public function productId()
     {
@@ -36,8 +37,9 @@ class Cms implements Product
      * @param int[Optional] $cmsVersionId If not provided this will be the latest version
      * @param int[Optional] $domainId If not provided this will be xibo.co.uk
      * @param int[Optional] $themeId If not provided this will be the spring signage xibo theme
+     * @param int[Optional] $renew Whether to renew or not.
      */
-    public function setNewInstance($accountName, $displays, $isDemo, $regionId, $monthlyBilling = 0, $cmsVersionId = null, $domainId = null, $themeId = null)
+    public function setNewInstance($accountName, $displays, $isDemo, $regionId, $monthlyBilling = 0, $cmsVersionId = null, $domainId = null, $themeId = null, $renew = null)
     {
         $this->accountName = $accountName;
         $this->displays = $displays;
@@ -47,6 +49,7 @@ class Cms implements Product
         $this->cmsVersionId = $cmsVersionId;
         $this->domainId = $domainId;
         $this->themeId = $themeId;
+        $this->renew = $renew;
     }
 
     /**
@@ -76,6 +79,9 @@ class Cms implements Product
             $details['domain_id'] = $this->domainId;
             $details['theme_id'] = $this->themeId;
             $details['cms_version_id'] = $this->cmsVersionId;
+
+            if ($this->renew !== null)
+                $details['renew'] = $this->renew;
         }
         else {
             // Existing account

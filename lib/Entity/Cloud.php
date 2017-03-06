@@ -48,7 +48,7 @@ class Cloud extends Base
      */
     public function getById($id)
     {
-        $data = $this->getProvider()->get('/cloud', ['hostingId' => $id]);
+        $data = $this->getProvider()->get('/cloud', ['search' => 'hostingId|' . $id]);
 
         if (count($data) < 0)
             throw new NotFoundException('Instance ' . $id . ' ID not found', 'cloud');
@@ -85,5 +85,38 @@ class Cloud extends Base
 
             return $data[0];
         }
+    }
+
+    /**
+     * Mark a CMS instance for upgrade
+     * @param int $accountId
+     * @param int $versionId
+     */
+    public function markForUpgrade($accountId, $versionId)
+    {
+        $this->getProvider()->post('/cloud/upgrade/' . $accountId, ['cmsVersionId' => $versionId]);
+    }
+
+    /**
+     * Renew Now
+     * @param int $accountId
+     * @return Order
+     */
+    public function renewNow($accountId)
+    {
+        $result = $this->getProvider()->put('/cloud/renewNow/' . $accountId);
+
+        $order = new Order($this->getProvider());
+        return $order->hydrate($result);
+    }
+
+    /**
+     * Delete the provided cms instance immediately.
+     * @param int $accountId
+     * @param string $accountName
+     */
+    public function deleteNow($accountId, $accountName)
+    {
+        $this->getProvider()->delete('/cloud/deleteNow/' . $accountId . '/' . $accountName);
     }
 }
