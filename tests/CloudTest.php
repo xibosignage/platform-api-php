@@ -25,4 +25,12 @@ class CloudTest extends TestCase
         $instances = (new \Xibo\Platform\Entity\Cloud($this->getProvider()))->getInstances();
         $this->assertGreaterThanOrEqual(1, count($instances));
     }
+
+    public function testRenewNow()
+    {
+        $instance = new \Xibo\Platform\Entity\Cloud($this->getProvider());
+        $order = $instance->renewNow(4808);
+
+        $this->assertNotEmpty($order->orderId);
+    }
 }

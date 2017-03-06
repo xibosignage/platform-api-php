@@ -46,7 +46,7 @@ class TestCase extends PHPUnit_Framework_TestCase
             'clientId' => $clientId,
             'clientSecret' => $clientSecret,
             'mode' => 'TEST',
-            'urlOverride' => 'http://192.168.1.113/portal'
+            'urlOverride' => getenv('XIBO_PLATFORM_URL')
         ], [
             'logger' => $log
         ]);

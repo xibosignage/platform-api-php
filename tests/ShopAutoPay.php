@@ -15,30 +15,32 @@ class ShopAutoPay extends TestCase
      */
     public function testCheckOutAndroidAutoPay()
     {
-        self::setFromEnv();
-
-        $android = new \SpringSignage\Api\Product\Android();
+        $android = new \Xibo\Platform\Entity\Product\Android();
         $android->emailAddress = 'test@springsignage.com';
         $android->version = '1.7';
         $android->numLicences = 2;
 
-        $order = \SpringSignage\Api\Shop::checkOut([$android]);
+        $cart = new \Xibo\Platform\Entity\Cart($this->getProvider());
+        $cart->addProduct($android);
+        $order = $cart->checkOut();
 
         $this->assertNotEmpty($order);
 
-        $this->assertArrayHasKey('orderId', (array)$order);
+        $this->assertObjectHasAttribute('orderId', $order);
 
         return $order->orderId;
     }
 
     /**
      * Test converting that quotation into an order
+     * @param int $orderId
      * @depends testCheckOutAndroidAutoPay
      */
     public function testProcessAndroidQuoteAutoPay($orderId)
     {
-        self::setFromEnv();
+        $order = new \Xibo\Platform\Entity\Order($this->getProvider());
+        $order->getById($orderId);
 
-        SpringSignage\Api\Shop::processQuote($orderId, true);
+        $order->complete(1);
     }
 }

@@ -1,10 +1,12 @@
-# PHP Library for the Xibo Cloud API
+# PHP Library for the Xibo Platform API
 
-&copy; Spring Signage Ltd 2015
+&copy; Spring Signage Ltd 2017
 
-This is a PHP library for the Spring Signage Xibo Cloud Platform. You can sign up for an account at https://springsignage.com/portal. The API is accessible to any customer holding a valid Reseller Account.
+This is a PHP library for the Spring Signage Xibo Platform API. You can sign up for an account 
+[here](https://springsignage.com/portal). The API is accessible to any customer holding a valid Reseller Account.
 
-User Documentation for the API can be found at https://springsignage.freshdesk.com/support/solutions/folders/3000006270.
+User Documentation for the API can be found in the 
+[Xibo Community KB](https://community.xibo.org.uk/t/xibo-platform-api/4196).
 
 ## Requirements
 PHP 5.4 and later
@@ -25,19 +27,8 @@ Then install with:
 composer install
 ```
 
+## Usage
+Please refer to the `/tests` folder for usage examples.
+
 ## Token Storage
-The Cloud API uses an oAuth Client Credentials Grant to authenticate requests. This library represents an AccessToken with the following structure.
-
-```
-{
-	"url": either the test/production endpoint
-	"token", the token
-	"timeout", the token timeout
-}
-```
-
-These tokens should be stored locally and reused until the time out occurs, this is handled transparently by the library but a credential store **must** be provided.
-
-The TokenStore implementation is simple, consisting of a save() and load() call to store/retrieve the AccessToken.
-
-A simple example can be found in the `tests/` folder.
+An `access_token` lives as long as the script using the library and will automatically renew on expiry.
