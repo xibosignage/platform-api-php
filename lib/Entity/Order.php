@@ -35,7 +35,7 @@ class Order extends Base
     {
         $this->getProvider()->getLogger()->debug('Order getById for ' . $orderId);
 
-        $result = $this->getProvider()->get('/user/orders?orderId=' . $orderId);
+        $result = $this->getProvider()->get('/user/orders', ['orderId' => $orderId]);
 
         if (count($result) <= 0)
             throw new NotFoundException();

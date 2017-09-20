@@ -23,9 +23,9 @@ class ApiException extends \Exception
         $this->code = $response->getStatusCode();
 
         if (!$decoded = json_decode($response->getBody())) {
-            $this->message = 'Status Code: ' . $response->getStatusCode() . '. JSON Error: ' . json_last_error_msg() . '. Body: ' . $response->getBody();
+            $this->message = 'Status Code: ' . $response->getStatusCode() . '. JSON Error: ' . json_last_error_msg();
         } else {
-            $this->message = $decoded->error->message;
+            $this->message = \GuzzleHttp\json_encode($decoded);
         }
 
         return $this;

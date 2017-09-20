@@ -3,7 +3,7 @@
 &copy; Spring Signage Ltd 2017
 
 This is a PHP library for the Spring Signage Xibo Platform API. You can sign up for an account 
-[here](https://springsignage.com/portal). The API is accessible to any customer holding a valid Reseller Account.
+[here](https://app.xibo.org.uk). The API is accessible to any customer holding a valid Reseller Account.
 
 User Documentation for the API can be found in the 
 [Xibo Community KB](https://community.xibo.org.uk/t/xibo-platform-api/4196).
