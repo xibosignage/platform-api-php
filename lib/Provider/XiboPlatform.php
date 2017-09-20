@@ -75,7 +75,9 @@ class XiboPlatform extends AbstractProvider
      */
     private function getBaseUrl()
     {
-        return ($this->mode == 'PRODUCTION') ? 'https://springsignage.com/portal' : (!empty($this->urlOverride) ? $this->urlOverride : 'https://springsignage.com/portal-test');
+        return ($this->mode == 'PRODUCTION') ?
+            'https://xibo.org.uk' :
+            (!empty($this->urlOverride) ? $this->urlOverride : 'https://test.xibo.org.uk');
     }
 
     /**
@@ -125,6 +127,7 @@ class XiboPlatform extends AbstractProvider
      */
     public function createResourceOwner(array $response, AccessToken $token)
     {
+        $this->logger->debug('Creating resource owner from ' . var_export($response, true));
         return new Account($response);
     }
 
@@ -135,9 +138,14 @@ class XiboPlatform extends AbstractProvider
 
     protected function checkResponse(ResponseInterface $response, $data)
     {
+        $this->logger->debug('Status Code: ' . $response->getStatusCode());
+
         // Check HTTP status
-        if ($response->getStatusCode() != 200 && $response->getStatusCode() != 201 && $response->getStatusCode() != 204)
+        if ($response->getStatusCode() != 200 && $response->getStatusCode() != 201 && $response->getStatusCode() != 204) {
+            $this->logger->error('Error: ' . $response->getBody());
+
             throw (new ApiException())->createFromResponse($response);
+        }
 
         if (!empty($data['error'])) {
             $message = $data['error']['type'].': '.$data['error']['message'];
@@ -157,8 +165,12 @@ class XiboPlatform extends AbstractProvider
      */
     public function me()
     {
-        if ($this->token === null || $this->token->hasExpired())
+        $this->logger->debug('Calling me');
+
+        if ($this->token === null || $this->token->hasExpired()) {
+            $this->logger->debug('Get new access token');
             $this->token = $this->getAccessToken('client_credentials');
+        }
 
         return $this->getResourceOwner($this->token);
     }
