@@ -24,7 +24,7 @@ class Cms implements Product
 
     public function productId()
     {
-        return 2;
+        return ($this->isDemo == 1) ? 17 : 2;
     }
 
     /**
