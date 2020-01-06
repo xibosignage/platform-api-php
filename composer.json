@@ -2,22 +2,22 @@
   "name": "xibosignage/platform-api-php",
   "description": "Xibo Cloud Platform and Licensing - PHP Library",
   "keywords": [
-    "spring signage",
+    "xibo signage",
     "xibo",
     "digital signage",
     "api"
   ],
-  "homepage": "https://springsignage.com",
+  "homepage": "https://xibo.org.uk",
   "license": "MIT",
   "authors": [
     {
-      "name": "Spring Signage Ltd",
-      "homepage": "https://springsignage.com"
+      "name": "Xibo Signage Ltd",
+      "homepage": "https://xibo.org.uk"
     }
   ],
   "require": {
     "php": ">=5.4.0",
-    "league/oauth2-client": "~1",
+    "league/oauth2-client": "2.4.*",
     "psr/log": "^1.0"
   },
   "require-dev": {
@@ -25,6 +25,13 @@
     "monolog/monolog": "^1.22"
   },
   "autoload": {
-    "psr-4": { "Xibo\\Platform\\" : "lib/" }
+    "psr-4": {
+      "Xibo\\Platform\\" : "lib/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "XiboTests\\": "tests/"
+    }
   }
 }

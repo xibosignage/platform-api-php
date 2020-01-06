@@ -1,7 +1,7 @@
 <?php
 /*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
+ * Xibo Signage Ltd - https://xibo.org.uk
+ * Copyright (C) 2016 Xibo Signage Ltd
  * (Account.php)
  */
 
@@ -15,16 +15,16 @@ class Account implements ResourceOwnerInterface, \JsonSerializable
     use EntityTrait;
 
     /** @var  int */
-    protected $id;
+    public $id;
 
-    protected $name;
-    protected $billingName;
-    protected $billingEmail;
+    /** @var string Associated UserName */
+    public $userName;
 
-    /**
-     * @var Account[]
-     */
-    protected $customers = [];
+    /** @var int Channel Partner Company Id */
+    public $companyId;
+
+    /** @var string API client name */
+    public $clientName;
 
     /**
      * XiboUser constructor.
@@ -32,19 +32,8 @@ class Account implements ResourceOwnerInterface, \JsonSerializable
      */
     public function __construct(array $attributes = [])
     {
-        if (count($attributes) > 1 && !array_key_exists('id', $attributes)) {
-            // Hydrate this object
-            $this->hydrate($attributes[0]);
-
-            // This object has children?
-            for ($i=1; $i < count($attributes); $i++) {
-                $child = new Account($attributes[$i]);
-                $this->customers[] = $child;
-            }
-        } else {
-            // Hydrate this object
-            $this->hydrate($attributes);
-        }
+        // Hydrate this object
+        $this->hydrate($attributes);
     }
 
     /**

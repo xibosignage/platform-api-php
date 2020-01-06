@@ -1,15 +1,16 @@
 <?php
 /*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2015 Spring Signage Ltd
+ * Xibo Signage Ltd - https://xibo.org.uk
+ * Copyright (C) 2015 Xibo Signage Ltd
  */
+namespace XiboTests;
 
 class ShopTest extends TestCase
 {
     /**
      * Test creating an android quotation
      * @return int
-     * @throws Exception
+     * @throws \Exception
      */
     public function testCheckOutAndroid()
     {
@@ -32,6 +33,8 @@ class ShopTest extends TestCase
      * Test converting that quotation into an order
      * @depends testCheckOutAndroid
      * @param int $orderId
+     * @throws \Xibo\Platform\Api\Error\InvalidArgumentException
+     * @throws \Xibo\Platform\Api\Error\NotFoundException
      */
     public function testProcessAndroidQuoteNoAutoPay($orderId)
     {
@@ -44,7 +47,7 @@ class ShopTest extends TestCase
     /**
      * Test creating a CMS demo
      * @return int
-     * @throws Exception
+     * @throws \Exception
      */
     public function testCheckOutCms()
     {
@@ -63,7 +66,7 @@ class ShopTest extends TestCase
 
     /**
      * Test creating a CMS demo and then creating a quotation to convert it to a full account
-     * @throws Exception
+     * @throws \Exception
      */
     public function testCheckOutCmsDemoThenUpgrade()
     {

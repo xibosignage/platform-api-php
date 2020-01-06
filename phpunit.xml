@@ -1,6 +1,6 @@
 <phpunit bootstrap="tests/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="Spring Signage Platform API PHP Test Suite">
+        <testsuite name="Xibo Signage Platform API PHP Test Suite">
             <directory suffix="Test.php">tests</directory>
         </testsuite>
     </testsuites>

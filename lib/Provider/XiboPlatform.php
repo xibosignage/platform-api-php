@@ -1,8 +1,8 @@
 <?php
 
 /*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
+ * Xibo Signage Ltd - https://xibo.org.uk
+ * Copyright (C) 2016 Xibo Signage Ltd
  * (XiboPlatform.php)
  */
 
@@ -12,6 +12,7 @@ use GuzzleHttp\Psr7\MultipartStream;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
+use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -20,6 +21,10 @@ use Xibo\Platform\Api\Error\ApiException;
 
 class XiboPlatform extends AbstractProvider
 {
+    use BearerAuthorizationTrait;
+
+    const ACCESS_TOKEN_RESOURCE_OWNER_ID = 'id';
+
     /** @var mixed|string  */
     protected $mode = 'TEST';
 
@@ -29,9 +34,7 @@ class XiboPlatform extends AbstractProvider
     /** @var  LoggerInterface */
     protected $logger;
 
-    /**
-     * @var AccessToken
-     */
+    /** @var AccessToken */
     protected $token;
 
     /**
@@ -42,17 +45,20 @@ class XiboPlatform extends AbstractProvider
     public function __construct(array $options, array $collaborators = [])
     {
         // Pull the mode out of settings.
-        if (isset($options['MODE']))
+        if (isset($options['MODE'])) {
             $this->mode = $options['MODE'];
+        }
 
-        if (isset($options['urlOverride']))
+        if (isset($options['urlOverride'])) {
             $this->urlOverride = $options['urlOverride'];
+        }
 
         // Logger
-        if (isset($collaborators['logger']))
+        if (isset($collaborators['logger'])) {
             $this->logger = $collaborators['logger'];
-        else
+        } else {
             $this->logger = new NullLogger();
+        }
 
         // Parent
         parent::__construct($options, $collaborators);
@@ -103,12 +109,6 @@ class XiboPlatform extends AbstractProvider
 
     /**
      * Get the URL that this provider uses to request user details.
-     *
-     * Since this URL is typically an authorized route, most providers will require you to pass the access_token as
-     * a parameter to the request. For example, the google url is:
-     *
-     * 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token='.$token
-     *
      * @param AccessToken $token
      * @return string
      */
@@ -131,6 +131,9 @@ class XiboPlatform extends AbstractProvider
         return new Account($response);
     }
 
+    /**
+     * @return array
+     */
     public function getDefaultScopes()
     {
         return [];
@@ -153,15 +156,9 @@ class XiboPlatform extends AbstractProvider
         }
     }
 
-    protected function getAuthorizationHeaders($token = null)
-    {
-        $token = ($token instanceof AccessToken) ? $token->getToken() : $token;
-
-        return ['Authorization' => 'Bearer ' . $token];
-    }
-
     /**
      * @return \League\OAuth2\Client\Provider\ResourceOwnerInterface
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
     public function me()
     {
@@ -179,6 +176,7 @@ class XiboPlatform extends AbstractProvider
      * @param $url
      * @param $params
      * @return mixed|array
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
     public function get($url, $params = [])
     {
@@ -189,6 +187,7 @@ class XiboPlatform extends AbstractProvider
      * @param $url
      * @param array $params
      * @return mixed
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
     public function post($url, $params = [])
     {
@@ -199,6 +198,7 @@ class XiboPlatform extends AbstractProvider
      * @param $url
      * @param array $params
      * @return mixed
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
     public function put($url, $params = [])
     {
@@ -209,6 +209,7 @@ class XiboPlatform extends AbstractProvider
      * @param $url
      * @param array $params
      * @return mixed
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
     public function delete($url, $params = [])
     {
@@ -221,6 +222,7 @@ class XiboPlatform extends AbstractProvider
      * @param $url
      * @param array $params
      * @return mixed
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
      */
     private function request($method, $url, $params = [])
     {
@@ -250,6 +252,11 @@ class XiboPlatform extends AbstractProvider
             }
         }
 
-        return $this->getResponse($this->getAuthenticatedRequest($method, $this->getBaseUrl() . '/api/' . trim($url, '/'), $this->token, $options));
+        $request = $this->getAuthenticatedRequest($method, $this->getBaseUrl() . '/api/' . trim($url, '/'), $this->token, $options);
+        $response = $this->getParsedResponse($request);
+
+        $this->getLogger()->debug('Response is: ' . json_encode($response));
+
+        return $response;
     }
 }

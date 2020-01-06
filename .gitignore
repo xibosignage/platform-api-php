@@ -1,4 +1,5 @@
-.vagrant/
 .idea/
 vendor/
+config.env
 example.php
+phpunit.log
