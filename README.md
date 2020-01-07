@@ -1,22 +1,41 @@
 # PHP Library for the Xibo Platform API
 
-&copy; Spring Signage Ltd 2017
+&copy; Xibo Signage Ltd 2020
 
-This is a PHP library for the Spring Signage Xibo Platform API. You can sign up for an account 
-[here](https://app.xibo.org.uk). The API is accessible to any customer holding a valid Reseller Account.
+This is a PHP library for the Xibo Signage Xibo Platform API. 
 
-User Documentation for the API can be found in the 
-[Xibo Community KB](https://community.xibo.org.uk/t/xibo-platform-api/4196).
+The API is for Xibo Signage Channel Partners.
+
+
+
+## Documentation
+
+Please see the `/docs` folder for information on how to use this library. 
+
+- [Introduction](docs/introduction.md)
+- [Authentication](docs/authentication.md)
+- [Checkout with PHP](docs/checkout_with_php.md)
+- [Checkout](docs/checkout.md)
+
+
+
+Further usage examples can be found in the `/tests` folder.
+
+
 
 ## Requirements
+
 PHP 5.4 and later
 
+
+
 ## Composer
+
 You can install the library via [Composer](http://getcomposer.org/). Add this to your `composer.json`:
 ```
 {
   "require": {
-    "xibosignage/platform-api-php": "1.*"
+    "xibosignage/platform-api-php": "3.*"
   }
 }
 ```
@@ -27,8 +46,42 @@ Then install with:
 composer install
 ```
 
-## Usage
-Please refer to the `/tests` folder for usage examples.
+
 
 ## Token Storage
+
 An `access_token` lives as long as the script using the library and will automatically renew on expiry.
+
+
+
+
+
+# Integration Tests
+
+This library has some basic integration tests, if you want to run these you are welcome to do so. Please be aware that transactions will be executed in your Test portal account.
+
+
+
+Create an `env` file containing your clientId/secret.
+
+```env
+XIBO_PLATFORM_CLIENT_ID=
+XIBO_PLATFORM_CLIENT_SECRET=
+```
+
+
+
+Build a Docker image and tag it
+
+```bash
+docker build -t phpunit-test .
+```
+
+
+
+Run the tests
+
+```bash
+docker run --env-file config.env -it --rm --name phpunit phpunit-test
+```
+

@@ -1,7 +1,7 @@
 <?php
 /*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2017 Spring Signage Ltd
+ * Xibo Signage Ltd - https://xibo.org.uk
+ * Copyright (C) 2017 Xibo Signage Ltd
  * (Android.php)
  */
 
@@ -15,6 +15,13 @@ class Android extends Base
 {
     use EntityTrait;
 
+    /**
+     * Get Pools by their Version Id
+     * @param $id
+     * @return mixed
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
+     * @throws \Xibo\Platform\Api\Error\NotFoundException
+     */
     public function getByVersionId($id)
     {
         $data = $this->getProvider()->get('/android', ['search' => 'versionid|' . $id]);
@@ -25,6 +32,15 @@ class Android extends Base
         return $data[0];
     }
 
+    /**
+     * Get all Pools for the connected account
+     * @param string $emailAddress
+     * @param string $version
+     * @param null $apiRef
+     * @return array|mixed
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException
+     * @throws \Xibo\Platform\Api\Error\NotFoundException
+     */
     public function getPools($emailAddress = '', $version = '', $apiRef = null)
     {
         $params = [];
@@ -46,8 +62,9 @@ class Android extends Base
         if ($emailAddress == '') {
             return $data;
         } else {
-            if (count($data) < 0)
+            if (count($data) < 0) {
                 throw new NotFoundException('Email Address ' . $emailAddress . ' not found', 'android');
+            }
 
             return $data[0];
         }

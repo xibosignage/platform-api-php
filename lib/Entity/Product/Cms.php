@@ -1,7 +1,7 @@
 <?php
 /*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2015 Spring Signage Ltd
+ * Xibo Signage Ltd - https://xibo.org.uk
+ * Copyright (C) 2015 Xibo Signage Ltd
  * (CloudCms.php)
  */
 
@@ -36,7 +36,7 @@ class Cms implements Product
      * @param int $monthlyBilling
      * @param int[Optional] $cmsVersionId If not provided this will be the latest version
      * @param int[Optional] $domainId If not provided this will be xibo.co.uk
-     * @param int[Optional] $themeId If not provided this will be the spring signage xibo theme
+     * @param int[Optional] $themeId If not provided this will be the Xibo Signage xibo theme
      * @param int[Optional] $renew Whether to renew or not.
      */
     public function setNewInstance($accountName, $displays, $isDemo, $regionId, $monthlyBilling = 0, $cmsVersionId = null, $domainId = null, $themeId = null, $renew = null)

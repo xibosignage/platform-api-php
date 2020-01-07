@@ -1,7 +1,7 @@
 <?php
 /*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2016 Spring Signage Ltd
+ * Xibo Signage Ltd - https://xibo.org.uk
+ * Copyright (C) 2016 Xibo Signage Ltd
  * (EntityTrait.php)
  */
 

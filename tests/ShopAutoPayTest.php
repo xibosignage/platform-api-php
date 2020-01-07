@@ -1,17 +1,17 @@
 <?php
 /*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2015 Spring Signage Ltd
+ * Xibo Signage Ltd - https://xibo.org.uk
+ * Copyright (C) 2015 Xibo Signage Ltd
  * (ShopAutoPay.php)
  */
+namespace XiboTests;
 
-
-class ShopAutoPay extends TestCase
+class ShopAutoPayTest extends TestCase
 {
     /**
      * Test creating an android quotation
      * @return int
-     * @throws Exception
+     * @throws \Exception
      */
     public function testCheckOutAndroidAutoPay()
     {
@@ -34,6 +34,8 @@ class ShopAutoPay extends TestCase
     /**
      * Test converting that quotation into an order
      * @param int $orderId
+     * @throws \Xibo\Platform\Api\Error\InvalidArgumentException
+     * @throws \Xibo\Platform\Api\Error\NotFoundException
      * @depends testCheckOutAndroidAutoPay
      */
     public function testProcessAndroidQuoteAutoPay($orderId)

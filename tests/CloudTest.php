@@ -1,10 +1,10 @@
 <?php
 /*
- * Spring Signage Ltd - http://www.springsignage.com
- * Copyright (C) 2015 Spring Signage Ltd
+ * Xibo Signage Ltd - https://xibo.org.uk
+ * Copyright (C) 2015 Xibo Signage Ltd
  * (CloudTest.php)
  */
-
+namespace XiboTests;
 
 class CloudTest extends TestCase
 {
@@ -26,11 +26,11 @@ class CloudTest extends TestCase
         $this->assertGreaterThanOrEqual(1, count($instances));
     }
 
-    public function testRenewNow()
+    /*public function testRenewNow()
     {
         $instance = new \Xibo\Platform\Entity\Cloud($this->getProvider());
         $order = $instance->renewNow(4808);
 
         $this->assertNotEmpty($order->orderId);
-    }
+    }*/
 }
