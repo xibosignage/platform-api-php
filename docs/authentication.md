@@ -96,5 +96,5 @@ curl -X GET \
 
 
 
-[Continue to Checkout](docs/checkout.md).
+[Continue to Checkout](checkout.md)
 
