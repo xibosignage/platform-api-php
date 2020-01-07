@@ -10,7 +10,7 @@ These 3 steps are taken with 3 calls to the API, each listed below in order.
 
 
 
-We recommend using the PHP library to simplify these API calls - see [Checking out with PHP](checkout_with_php.md).
+We recommend using the PHP library to simplify these API calls - see [Checking out with PHP](checkout_with_php.md). Following are examples using curl should you not wish to use PHP.
 
 
 
@@ -19,12 +19,20 @@ We recommend using the PHP library to simplify these API calls - see [Checking o
 Get a list of products/services available to purchase and their prices.
 
 
-    GET https://xibo.org.uk/api/products
+```bash
+curl -X GET \
+  https://test.xibo.org.uk/api/products \
+  -H 'Accept: */*' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Authorization: Bearer access_token' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Host: test.xibo.org.uk' \
+  -H 'cache-control: no-cache'
+```
 
-  
 
 Returns an array of products with your unique pricing and terms.
-     
 ```json
 {
     "products": [
@@ -32,10 +40,15 @@ Returns an array of products with your unique pricing and terms.
             "productId": "<product id>",
             "name": "<product name>",
             "description": "<product description>",
-            "unitCost": "<unit cost - gbp>",
+            "costs": [
+               {
+                   "unitCost": 0,
+                   "unitCostNotes": "Notes",
+                   "currencySymbol": "$|£|€"
+               } 
+            ],
             "terms": "<terms and conditions>",
-            "deliveryTerms": "<delivery terms>",
-            "unitCostNotes": "<unit cost notes>"
+            "deliveryTerms": "<delivery terms>"
         }
     ]
 }
@@ -43,27 +56,108 @@ Returns an array of products with your unique pricing and terms.
 
 
 
-Checkout
+All `GET` requests which return arrays of data come in pages. You can use the `X-Total-Count` header to see how many records there are in total.
+
+You can use the `start` and `length` parameters to request additional pages.
+
+
+
+Validate Cart and Checkout
 --------
 
-Post an order request which will be saved as a quotation.
+To validate/checkout a cart you need to have some line items. Each line item has a `productId` and some `productDetails`. The details required depend on the product you're ordering.
+
+For Android the details are:
+
+- `emailAddress`
+- `version`
+- `numLicences`
 
 
-    POST https://xibo.org.uk/api/shop/checkout
-     
-    {
-        "lineItems": [{
-            "productId": 2,
+
+For New Cloud the details are:
+
+- `account_name`
+- `displays`
+- `monthly_billing`
+- `is_demo`
+- `region_id`
+- `domain_id`
+- `theme_id`
+- `cms_version_id`
+
+
+
+For example Cloud the details are:
+
+- `displays`
+- `upgradeId`
+
+
+
+If you would like to validate your cart before you checkout, you can do so using the validate route.
+
+```bash
+curl -X POST \
+  https://test.xibo.org.uk/api/user/cart/validate \
+  -H 'Accept: */*' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Authorization: Bearer access_code' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Content-Length: 265' \
+  -H 'Content-Type: application/json' \
+  -H 'Host: test.xibo.org.uk' \
+  -H 'cache-control: no-cache' \
+  -d '{
+    "lineItems": [
+        {
+            "productId": 1,
             "productDetails": {
-                "emailAddress": "<licence pool email address>",
+                "emailAddress": "dan@xibosignage.com",
                 "version": "1.7",
                 "numLicences": 2
-            },
-            "companyId": <optional child companyId>
-        }]
-    }
+            }
+        }
+    ]
+}'
+```
+
+Make sure you provide the Content-Type and Content-Length headers correctly.
+
+If this request returns a 200, the body will contain an Order entity without an `orderId`.
+
+
+
+If you are happy you can then checkout the order, which will save it as a quotation and provide an `orderId` in the response.
+
+
+    curl -X POST \
+      https://test.xibo.org.uk/api/user/checkout \
+      -H 'Accept: */*' \
+      -H 'Accept-Encoding: gzip, deflate' \
+      -H 'Authorization: Bearer access_code' \
+      -H 'Cache-Control: no-cache' \
+      -H 'Connection: keep-alive' \
+      -H 'Content-Length: 265' \
+      -H 'Content-Type: application/json' \
+      -H 'Host: test.xibo.org.uk' \
+      -H 'cache-control: no-cache' \
+      -d '{
+        "lineItems": [
+            {
+                "productId": 1,
+                "productDetails": {
+                    "emailAddress": "dan@xibosignage.com",
+                    "version": "1.7",
+                    "numLicences": 2
+                }
+            }
+        ]
+    }'
 
   
+
 
 Returns an `orderId` and costing (see order structure below).
 
@@ -73,16 +167,22 @@ Returns an `orderId` and costing (see order structure below).
 Process Quote
 -------------
 
-Post a quote accept message and either invoice or auto-charge using a saved card.
+Post a quote accept message and either invoice (`autoPay=0`) or auto-charge using a saved card (`autoPay=1`).
 
 
-    POST http://xibo.org.uk/api/shop/processquote/<orderId>
-     
-    {
-       "autoPay": <0 or 1>
-    }
+    curl -X POST \
+      https://test.xibo.org.uk/api/shop/processquote/1234555 \
+      -H 'Accept: */*' \
+      -H 'Accept-Encoding: gzip, deflate' \
+      -H 'Authorization: Bearer access_token' \
+      -H 'Cache-Control: no-cache' \
+      -H 'Connection: keep-alive' \
+      -H 'Content-Length: 163' \
+      -H 'Content-Type: application/x-www-form-urlencoded' \
+      -H 'Host: test.xibo.org.uk' \
+      -H 'cache-control: no-cache' \
+      -d autoPay=0
 
-  
 
 Returns and order (see order structure below)
 
@@ -91,49 +191,9 @@ Returns and order (see order structure below)
       order: {}
     }
 
- 
-
- 
-
-My Account
-----------
-
-It is possible to view your current account position (your account details), including any customers you have registered with us.
-
-
-    GET https://xibo.org.uk/api/user/account
-
-Returns
-
-```json
-{
-    "user": {
-        "id": "9",
-        "userName": "<your user name>",
-        "dateCreated": "<account created date>",
-        "lastLogin": "<last login>",
-        "blockExpires": "<if blocked, when does the block expire",
-        "companyId": "<home companyId>",
-        "rfStatusId": "<account status>",
-        "emailMarketing": "<whether email marketing is enabled>",
-        "rfStatus": "<account status>",
-        "clientId": "<api client key>",
-        "clientName": "<api client name>"
-    }
-}
-```
 
 
 
-Or with PHP
-
-```php
-$provider->me();
-```
-
-
-
-  
 
 
 Orders
@@ -142,7 +202,17 @@ Orders
 Should you wish to list out your recent orders, you may do so:
 
 
-    GET http://xibo.org.uk/user/orders
+```bash
+curl -X GET \
+  https://test.xibo.org.uk/api/user/orders \
+  -H 'Accept: */*' \
+  -H 'Accept-Encoding: gzip, deflate' \
+  -H 'Authorization: Bearer access_token' \
+  -H 'Cache-Control: no-cache' \
+  -H 'Connection: keep-alive' \
+  -H 'Host: test.xibo.org.uk' \
+  -H 'cache-control: no-cache'
+```
 
 Returns
 
@@ -163,7 +233,7 @@ Returns
             "total": "<total>",
             "currency": "<currency>",
             "paymentLink": "<order payment code>",
-            "purchaseOrderNumber": <purchase order number, if applicable>,
+            "purchaseOrderNumber": "<purchase order number, if applicable>",
             "rfStatus": "<order status>",
             "billingName": "<billing name>",
             "company": "<billing company>"

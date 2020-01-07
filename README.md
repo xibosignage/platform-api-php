@@ -4,13 +4,22 @@
 
 This is a PHP library for the Xibo Signage Xibo Platform API. 
 
-The API is accessible to any channel partner.
+The API is for Xibo Signage Channel Partners.
 
 
 
 ## Documentation
 
-Please see the `/docs` folder for information on how to use this library. Further usage examples can be found in the `/tests` folder.
+Please see the `/docs` folder for information on how to use this library. 
+
+- [Introduction](docs/introduction.md)
+- [Authentication](docs/authentication.md)
+- [Checkout with PHP](docs/checkout_with_php.md)
+- [Checkout](docs/checkout.md)
+
+
+
+Further usage examples can be found in the `/tests` folder.
 
 
 

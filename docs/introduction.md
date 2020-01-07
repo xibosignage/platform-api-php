@@ -1,12 +1,14 @@
+# Introduction
+
 Xibo Signage provide an API for integrating the Xibo Platform into your own website or systems. The API can be used to query for details about your account, licence or cloud usage and make changes, such as provisioning a new CMS instance. **The Platform API is available to members of the [Channel Partner Program](https://xibo.org.uk/become-a-partner)**.
 
-This is **not the Xibo CMS API**, details for which can be found in the [manual](https://xibo.org.uk/docs/developer/integrating-with-xibo).
+This is **not the Xibo CMS API**, details for which can be found in the [developer documentation](https://xibo.org.uk/docs/developer/integrating-with-xibo).
 
-The Xibo Platform API is a REST API designed to have intuitively named resource locations, JSON responses and HTTP response codes to indicate status. All requests must be made over HTTPS and HTTP requests will fail.
+The Xibo Platform API is a REST API designed to have intuitively named resource locations, JSON responses and HTTP response codes to indicate status. All requests must be made over HTTPS.
 
 There is a live and test environment.
 
-A library written for PHP is available and simplifies interaction with the API. Further information regarding the library, install and usage can be found in the [GitHub repository](https://github.com/xibosignage/platform-api-php).
+This library written for PHP aims to simplifies interaction with the API, by publishing an oAuth2 Provider to manage access and Entities to represent common operations.
 
 
 
@@ -29,24 +31,30 @@ Transactions that happen in the live environment will effect your live account a
 
  - Live: https://xibo.org.uk/api
  - Test: https://test.xibo.org.uk/api
+ - If you use the PHP oAuth2 provider the connect details are managed for you
 
 
 
 ### API Keys
 
-Your API keys are stored securely in your account and can be "refreshed" at any time if you think someone else may have copied them. When you first open an account the clientId and clientSecret will be empty and you will need to provide a name for your integration and click save to get both keys.
+Your API keys are stored securely in your account and can be "refreshed" at any time if you think someone else may have copied them. When you first open an account the `clientId` and `clientSecret` will be empty and you will need to provide a name for your integration and click save to get both keys.
 
-We strongly recommend that both keys remain secret, but at the least the clientSecret must be private at all times.
+We strongly recommend that both keys remain secret, but at the least the `clientSecret` must be private at all times.
 
 To enable your integration and get your API keys please visit the "My Account" -> Security section of the customer portal (remember to use the test one first) and name your integration - see below for an example.
 
 <img src="img/f4a306dc74e8c9eba9162628612a9265efdf32f0.png" width="689" height="474">
 
 ### Billing
-In many cases the goal of integration is to minimise or eliminate manual actions, therefore it is often desirable for you to automate payment of orders, which is done by saving your card details in your account. Monthly billing of CMS instances require a saved card, for other orders it is optional and we will email you an invoice with payment link instead.
+In many cases the goal of integration is to minimise or eliminate manual actions, therefore it is often desirable for you to automate payment of Orders, which is done by saving your card details in your account. Monthly billing of CMS instances require a saved card, for other Orders it is optional and we will email you an invoice with payment link if you do not have a saved payment method, or if that method fails to authorise.
 
 You will find the option to save a card on the Billing tab of "My Account", shown below:
 
 <img src="img/6a29cc59a9ada1fa9bf583a9390932b70b3d1ca7.png" width="690" height="318">
 
-Please note, Xibo Signage do not actually store your card details. These are stored by our payment processor (stripe.com).
+Please note that all card details are stored by our payment processor (Stripe.com). Xibo Signage do not store your card details.
+
+
+
+[Continue to Authentication](docs/authentication.md)
+

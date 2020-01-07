@@ -17,10 +17,12 @@ $cart = new \Xibo\Platform\Entity\Cart($this->getProvider());
 $cart->addProduct($android);
 
 $order = $cart->checkOut();
+// You can also call $cart->validate()` first if you wish to validate the line items
+// without submitting an order for quote on success
 
 echo 'The orderId is' . $order->orderId;
 
-// Store this in your own system
+// Store the orderId in your own system
 ```
 
 Then complete the order:
