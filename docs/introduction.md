@@ -56,5 +56,5 @@ Please note that all card details are stored by our payment processor (Stripe.co
 
 
 
-[Continue to Authentication](docs/authentication.md)
+[Continue to Authentication](authentication.md)
 
