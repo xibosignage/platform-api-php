@@ -62,7 +62,7 @@ class Android extends Base
         if ($emailAddress == '') {
             return $data;
         } else {
-            if (count($data) < 0) {
+            if (count($data) <= 0) {
                 throw new NotFoundException('Email Address ' . $emailAddress . ' not found', 'android');
             }
 
